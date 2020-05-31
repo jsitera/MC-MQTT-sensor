@@ -8,8 +8,8 @@
 #include "config.h"
 
 
-// configuration of MQTT server ==============================================
-//#define mqtt_server "mqtt server ip"
+// configuration f MQTT server ==============================================
+//#define mqtt_server "your mqtt server IP address"
 // no MQTT security
 // #define mqtt_user "your_username"
 // #define mqtt_password "your_password"
@@ -17,6 +17,7 @@
 // =============== configuration of MQTT topics / OpenHAB items setup =======
 #define humidity_topic "PI1/humidity"
 #define temperature_topic "PI1/temperature"
+#define weather_topic "PI1/weather"
 
 // =============== configuration of DHT sensor ==============================
 #define DHTPIN 2     // what digital pin we're connected to
@@ -27,6 +28,8 @@
 //#define DHTTYPE DHT11   // DHT 11
 #define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
 //#define DHTTYPE DHT21   // DHT 21 (AM2301)
+
+int nRainDigitalIn = D0;   // rain sensor D0 pin
 
 // ===================== config end ==========================================
 
@@ -45,9 +48,10 @@ void setup() {
   Serial.begin(115200);
   setup_wifi();
   client.setServer(mqtt_server, 1883);
-  Serial.println("OpenHAB sensor started.");
+  Serial.println("Minecraft MQTT sensor started.");
 
   dht.begin();
+  pinMode(nRainDigitalIn,INPUT);
 }
 
 void setup_wifi() {
@@ -92,6 +96,8 @@ long lastMsg = millis();
 
 float temp = 0;
 float hum = 0;
+boolean isRaining = false;
+String strRaining;
 
 void loop(){
   //auto reconnect MQTT if needed
@@ -127,6 +133,20 @@ void loop(){
     Serial.print("Humidity:");
     Serial.println(String(hum).c_str());
     client.publish(humidity_topic, String(hum).c_str(), true);
-    // read the return code?
+
+    isRaining = !(digitalRead(nRainDigitalIn));
+  
+    if(isRaining){
+      strRaining = "rain";
+    }
+    else{
+      strRaining = "clear";
+    }
+
+    Serial.print("Weather:");
+    Serial.println(strRaining);
+    client.publish(weather_topic, String(strRaining).c_str(), true);
+
+    
   }
 }
