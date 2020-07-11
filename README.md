@@ -5,3 +5,4 @@ Reads sensors and send the measurements to configured MQTT broker. Use https://g
 # Implemented sensors
 - Temperature and humidity sensor
 - Rain sensor
+- (MC-MQTT-sensor-button) New sensor with flip-flop button. It is button with indicating LED.
