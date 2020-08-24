@@ -1,10 +1,10 @@
-// ESP8266 sketch sending data from sensor to MQTT
-// sensor: DHT22, wifi connection
+// ESP8266 sketch sending data from sensor to MQTT broker via wifi
+// sensors: DHT22, rain sensor
 
-#include "DHT.h"
+#include "DHT.h"           //install DHT sensor library by adafruit
 #include <ESP8266WiFi.h>
 #include <Wire.h>
-#include <PubSubClient.h>
+#include <PubSubClient.h>  //install library pubsubclient O'Leary 
 #include "config.h"
 
 
