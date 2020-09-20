@@ -23,7 +23,7 @@
 #define input_topic "MC1/#"
 
 
-const int buttonPin = D3;
+const int buttonPin = D3;     // must have pull up resistor
 
 const int ledPins[] = {D8, D7, D6, D5}; // LED pins
 int ledCount = 4;
@@ -118,20 +118,19 @@ void onButtonReleased(Button& btn, uint16_t duration){
 
 void messageReceived(char* topic_char, byte* payload, unsigned int length) {
 
-  //todo - check topic!
-
   // convert parameters to String type
   String topic = String(topic_char);
   char str[length];
   memcpy(str, payload, length);
   str[length] = 0;
-  
   String message = String(str);
 
   Serial.print("Message arrived [");
   Serial.print(topic);
   Serial.print("] ");
   Serial.println(message);
+
+  //todo - check topic!
 
   int number = message.toInt();   // if not a valid number, it returns zero
 
@@ -143,7 +142,5 @@ void messageReceived(char* topic_char, byte* payload, unsigned int length) {
     Serial.print(value);
   }
   Serial.println();
-
-
 
 }
