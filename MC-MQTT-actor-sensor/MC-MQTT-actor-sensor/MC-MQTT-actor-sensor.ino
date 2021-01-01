@@ -19,13 +19,13 @@
 // #define mqtt_password "your_password"
 
 // =============== configuration of MQTT topics / OpenHAB items setup =======
-#define button_topic "PI1/farmbutton"
-#define input_topic "MC1/#"
+#define button_topic "PI1/espblockblue"
+#define input_topic "MC1/espblockblue"
 
 
 const int buttonPin = D3;     // must have pull up resistor
 
-const int ledPins[] = {D8, D7, D6, D5}; // LED pins
+const int ledPins[] = {D5, D6, D7, D8}; // LED pins
 int ledCount = 4;
 
 
@@ -52,7 +52,7 @@ void setup() {
 
   for(int i = 0; i < ledCount; ++i) {
     pinMode(ledPins[i], OUTPUT);
-    digitalWrite(ledPins[i], HIGH);
+    digitalWrite(ledPins[i], LOW);
   }
 }
 
@@ -132,15 +132,25 @@ void messageReceived(char* topic_char, byte* payload, unsigned int length) {
 
   //todo - check topic!
 
-  int number = message.toInt();   // if not a valid number, it returns zero
-
   int i, value;
   for(i = 0; i < ledCount; ++i) {
-    value = (number >> ledCount-i-1) & 1;  //rotate and mask last bit / value of bit's bit in number
-    
+    value = String(message[i]).toInt();  //give me the bit and convert it to int
+  
     digitalWrite(ledPins[i], value);
     Serial.print(value);
   }
   Serial.println();
+ 
+  //variant for decadic number encoding
+  //int number = message.toInt();   // if not a valid number, it returns zero
+
+  //int i, value;
+  //for(i = 0; i < ledCount; ++i) {
+  //  value = (number >> ledCount-i-1) & 1;  //rotate and mask last bit / value of bit's bit in number
+  //  
+  //  digitalWrite(ledPins[i], value);
+  //  Serial.print(value);
+  //}
+  //Serial.println();
 
 }
